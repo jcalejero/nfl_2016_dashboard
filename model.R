@@ -10,8 +10,12 @@ GetTeams <- function() {
 
 BuildDataOffensiveType <- function(params) {
   nflplaybyplay2015 <- GetData()
-  dataf <- nflplaybyplay2015[nflplaybyplay2015$qtr == params[2] 
-                             & nflplaybyplay2015$posteam == params[1], c("PlayType", "Yards.Gained", "down")]
+  if (params[2] == 0) {
+    dataf <- nflplaybyplay2015[nflplaybyplay2015$posteam == params[1], c("PlayType", "Yards.Gained", "down")]
+  } else {
+    dataf <- nflplaybyplay2015[nflplaybyplay2015$qtr == params[2] 
+                               & nflplaybyplay2015$posteam == params[1], c("PlayType", "Yards.Gained", "down")]
+  }
   dataf <- na.omit(dataf)
   dataf <- ddply(dataf, "PlayType", summarise, 
                  FirstDown = round(mean(`Yards.Gained`[down == 1]), 2),
@@ -26,13 +30,17 @@ BuildDataOffensiveType <- function(params) {
 
 BuildMatrixForHeatMap <- function(params) {
   nflplaybyplay2015 <- GetData()
-  network <- nflplaybyplay2015[nflplaybyplay2015$qtr == params[2], c("yrdline100", "Yards.Gained")]
+  if (params[2] == 0) {
+    network <- nflplaybyplay2015[ , c("yrdline100", "Yards.Gained")]
+    dataf <- nflplaybyplay2015[nflplaybyplay2015$posteam == params[1], c("yrdline100", "Yards.Gained")]
+  } else {
+    network <- nflplaybyplay2015[nflplaybyplay2015$qtr == params[2], c("yrdline100", "Yards.Gained")]
+    dataf <- nflplaybyplay2015[nflplaybyplay2015$qtr == params[2] 
+                               & nflplaybyplay2015$posteam == params[1], c("yrdline100", "Yards.Gained")]
+  }
   network <- na.omit(network)
   network <- aggregate(`Yards.Gained` ~ yrdline100, data = network, FUN = mean)
   colnames(network) <- c("yrdline100", "League")
-  
-  dataf <- nflplaybyplay2015[nflplaybyplay2015$qtr == params[2] 
-                            & nflplaybyplay2015$posteam == params[1], c("yrdline100", "Yards.Gained")]
   
   dataf <- na.omit(dataf)
   dataf <- aggregate(`Yards.Gained` ~ yrdline100, data = dataf, FUN = mean)
