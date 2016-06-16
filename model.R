@@ -8,6 +8,22 @@ GetTeams <- function() {
   return(unique(aux$posteam))
 }
 
+BuildDataOffensiveType <- function(params) {
+  nflplaybyplay2015 <- GetData()
+  dataf <- nflplaybyplay2015[nflplaybyplay2015$qtr == params[2] 
+                             & nflplaybyplay2015$posteam == params[1], c("PlayType", "Yards.Gained", "down")]
+  dataf <- na.omit(dataf)
+  dataf <- ddply(dataf, "PlayType", summarise, 
+                 FirstDown = round(mean(`Yards.Gained`[down == 1]), 2),
+                 SecondDown = round(mean(`Yards.Gained`[down == 2]), 2),
+                 ThirdDown = round(mean(`Yards.Gained`[down == 3]), 2),
+                 FourthDown = round(mean(`Yards.Gained`[down == 4]), 2))
+  dataf[is.na(dataf)] = 0
+  
+  return(dataf)
+} 
+
+
 BuildMatrixForHeatMap <- function(params) {
   nflplaybyplay2015 <- GetData()
   network <- nflplaybyplay2015[nflplaybyplay2015$qtr == params[2], c("yrdline100", "Yards.Gained")]

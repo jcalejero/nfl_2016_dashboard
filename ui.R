@@ -1,5 +1,9 @@
 library(shiny)
 library(plotly)
+library(plyr)
+library(googleVis)
+source('model.R')
+
 
 shinyUI(pageWithSidebar(
   headerPanel('NFL 2015-16 Analysis'),
@@ -12,6 +16,11 @@ shinyUI(pageWithSidebar(
                 selected = 1)
   ),
   mainPanel(
-    plotlyOutput('heatmap')
+    tabsetPanel(
+      tabPanel("Drive",  plotlyOutput('heatmap')), 
+      tabPanel("Offensive", plotlyOutput('GainedYardsChart'),
+               h6("Summary Data"),
+               htmlOutput("GainedYardsTable"))
+    )
   )
 ))
