@@ -2,6 +2,6 @@ name: nfl_2016_dashboard
 account: jcalejero
 server: shinyapps.io
 appId: 108960
-bundleId: 482005
+bundleId: 482110
 url: https://jcalejero.shinyapps.io/nfl_2016_dashboard/
-when: 1466089952.4721
+when: 1466096813.75459

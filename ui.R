@@ -4,7 +4,7 @@ library(plyr)
 library(googleVis)
 source('model.R')
 
-
+#rsconnect::deployApp('/Volumes/moneta/Personal/nfl_2016_dashboard/')
 shinyUI(pageWithSidebar(
   headerPanel('NFL 2015-16 Analysis'),
   sidebarPanel(
